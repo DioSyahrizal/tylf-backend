@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Main</title>
+  </head>
+
+  <body>
+    <button>login gogle</button>
+  </body>
+
+  <script>
+    const GOOGLE_CLIENT_ID = "{{.GoogleClientId}}";
+    function googleLogin() {
+      const url = new URL("https://accounts.google.com/o/oauth2/v2/auth");
+      url.searchParams.append("response_type", "code");
+      url.searchParams.append("client_id", GOOGLE_CLIENT_ID);
+      url.searchParams.append(
+        "redirect_uri",
+        `http://localhost:8080/auth/google/callback`
+      );
+      url.searchParams.append(
+        "scope",
+        "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email"
+      );
+      url.searchParams.append("access_type", "offline");
+      window.location.assign(url.toString());
+    }
+
+    const button = document.querySelector("button");
+    button.addEventListener("click", () => {
+      googleLogin();
+    });
+  </script>
+</html>
