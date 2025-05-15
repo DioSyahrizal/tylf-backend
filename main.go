@@ -14,9 +14,9 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/session"
 	postgresStorage "github.com/gofiber/storage/postgres/v3"
 	"github.com/gofiber/template/html/v2"
-	"github.com/spf13/viper"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"tylf.com/config"
 )
 
 // ==== MODELS ==== //
@@ -50,33 +50,11 @@ type ResponseGoogle struct {
 	RefreshToken string `json:"refresh_token"`
 }
 
-type Env struct {
-	DB_HOST              string `mapstructure:"DB_HOST"`
-	DB_USER              string `mapstructure:"DB_USER"`
-	DB_PASSWORD          string `mapstructure:"DB_PASSWORD"`
-	DB_NAME              string `mapstructure:"DB_NAME"`
-	DB_PORT              int    `mapstructure:"DB_PORT"`
-	APP_ENV              string `mapstructure:"APP_ENV"`
-	GOOGLE_CLIENT_ID     string `mapstructure:"GOOGLE_CLIENT_ID"`
-	GOOGLE_CLIENT_SECRET string `mapstructure:"GOOGLE_CLIENT_SECRET"`
-}
-
 // ==== MAIN ==== //
 
 func main() {
 
-	env := Env{}
-	viper.SetConfigFile(".env")
-
-	err := viper.ReadInConfig()
-	if err != nil {
-		log.Fatal("Can't find the file .env : ", err)
-	}
-
-	err = viper.Unmarshal(&env)
-	if err != nil {
-		log.Fatal("Environment can't be loaded: ", err)
-	}
+	env := config.Load()
 
 	if env.APP_ENV == "development" {
 		log.Println("The App is running in development env")
